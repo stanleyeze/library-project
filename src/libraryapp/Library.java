@@ -16,17 +16,17 @@ public class Library extends javax.swing.JFrame {
         // initialize/add a book
         book = new Book(); // create a new instance of the book object
         book.setName("Book 1");
-        book.setAuthor("George");
+        book.setAuthor("Unknown");
         book.setISBN(Integer.parseInt("979"));
-        
+
         //add book to the arrayList of type book.
         bookArray.add(book);
         DefaultTableModel model = (DefaultTableModel) jTablelist.getModel();
-        
+
         // display number of available books
-        jLabelcount.setText(Integer.toString(bookArray.size())+" Book(s) Available");
+        jLabelcount.setText(Integer.toString(bookArray.size()) + " Book(s) Available");
         for (int i = 0; i < bookArray.size(); i++) {// loop through the array list
-            model.addRow(new Object[]{bookArray.get(i).getISBN(), bookArray.get(i).getName(),bookArray.get(i).getAuthor()});// display a row
+            model.addRow(new Object[]{bookArray.get(i).getISBN(), bookArray.get(i).getName(), bookArray.get(i).getAuthor()});// display a row
         }
 
     }
@@ -377,7 +377,7 @@ public class Library extends javax.swing.JFrame {
             bookArray.add(book);
             DefaultTableModel model = (DefaultTableModel) jTablelist.getModel();// creates a table model
             model.addRow(new Object[]{jTextFieldisbn.getText(), jTextFieldtitle.getText(), jTextFieldauthor.getText()});// add a row to the table
-            jLabelcount.setText(Integer.toString(bookArray.size())+" Book(s) Available");// display number of available books
+            jLabelcount.setText(Integer.toString(bookArray.size()) + " Book(s) Available");// display number of available books
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "No field must be empty, ISBN must be a number");// displays exception text
@@ -393,15 +393,12 @@ public class Library extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) jTablelist.getModel();// create a table model
 
         // clears table data 
-        int rowCount = model.getRowCount();
-        for (int i = rowCount - 1; i >= 0; i--) {
-            model.removeRow(i);
-        }
+        removeRows(model);
 
         if (bookArray.size() > 0) {// check if there's an item to display
             for (int i = 0; i < bookArray.size(); i++) {// loop through the array list
-                model.addRow(new Object[]{bookArray.get(i).getISBN(), bookArray.get(i).getName(),bookArray.get(i).getAuthor()});// display a row
-                jLabelcount.setText(Integer.toString(bookArray.size())+" Book(s) Available");// display number of available books
+                model.addRow(new Object[]{bookArray.get(i).getISBN(), bookArray.get(i).getName(), bookArray.get(i).getAuthor()});// display a row
+                jLabelcount.setText(Integer.toString(bookArray.size()) + " Book(s) Available");// display number of available books
             }
         } else {
             JOptionPane.showMessageDialog(null, "No data found, Add one...");// notify the user if there is no item to list
@@ -419,7 +416,7 @@ public class Library extends javax.swing.JFrame {
             } else {
                 model.removeRow(selectedRowIndex);// remove the selected row fro table
                 bookArray.remove(selectedRowIndex); // remove the selected row fro array list
-                jLabelcount.setText(Integer.toString(bookArray.size())+" Book(s) Available");// display number of available books
+                jLabelcount.setText(Integer.toString(bookArray.size()) + " Book(s) Available");// display number of available books
             }
 
         } catch (Exception e) {
@@ -438,43 +435,42 @@ public class Library extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldsearchFocusGained
 
     private void jButtonsearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonsearchActionPerformed
-        try{
-        //function that searches the arraylist 
-        DefaultTableModel model = (DefaultTableModel) jTablelist.getModel();// table model object created
-        String searchQuerry = jTextFieldsearch.getText();// get the search text
-        int counter = 0; ////counter to keep track of the number of item that matches the search
+        try {
+            //function that searches the arraylist 
+            DefaultTableModel model = (DefaultTableModel) jTablelist.getModel();// table model object created
+            String searchQuerry = jTextFieldsearch.getText();// get the search text
+            int counter = 0; ////counter to keep track of the number of item that matches the search
 
-        for (int i = 0; i < bookArray.size(); i++) {// loop through the array list
+            for (int i = 0; i < bookArray.size(); i++) {// loop through the array list
 
-            //check if the search querry matches either any name, isbn or description in the arraylist
-            if ((bookArray.get(i).getISBN() == Integer.parseInt(searchQuerry) || bookArray.get(i).getName().equals(searchQuerry) || bookArray.get(i).getAuthor().equals(searchQuerry)) && bookArray.size() != 0) {
+                //check if the search querry matches either any name, isbn or description in the arraylist
+                if ((bookArray.get(i).getISBN() == Integer.parseInt(searchQuerry) || bookArray.get(i).getName().equals(searchQuerry) || bookArray.get(i).getAuthor().equals(searchQuerry)) && bookArray.size() != 0) {
 
-                //create the table for a new result
-                int rowCount = model.getRowCount();
-                for (int j = rowCount - 1; j >= 0; j--) {
-                    model.removeRow(j);
+                    // clears table data 
+                    removeRows(model);
+
+                    //create the table for a new result
+                    model.addRow(new Object[]{bookArray.get(i).getISBN(), bookArray.get(i).getName(), bookArray.get(i).getAuthor()});// add a row to the table
+                    jLabelcount.setText(Integer.toString(bookArray.size()) + " Book(s) Available");// display number of available books
+                    counter++;
                 }
-                model.addRow(new Object[]{bookArray.get(i).getISBN(), bookArray.get(i).getName(), bookArray.get(i).getAuthor()});// add a row to the table
-                jLabelcount.setText(Integer.toString(bookArray.size())+" Book(s) Available");// display number of available books
-                counter++;
+
             }
 
-        }
-
-        // notify the user if nothing was found
-        if (counter == 0) {
-            JOptionPane.showMessageDialog(null, "No result found!");
-        } else {
-            JOptionPane.showMessageDialog(null, counter + " Result(s) found!");
-        }
-        }catch(NumberFormatException e ){
-         JOptionPane.showMessageDialog(null,  " Sorry you can only search by ID");
+            // notify the user if nothing was found
+            if (counter == 0) {
+                JOptionPane.showMessageDialog(null, "No result found!");
+            } else {
+                JOptionPane.showMessageDialog(null, counter + " Result(s) found!");
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, " Sorry you can only search by ID");
         }
 
     }//GEN-LAST:event_jButtonsearchActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-         System.exit(0);
+        System.exit(0);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
@@ -537,4 +533,13 @@ public class Library extends javax.swing.JFrame {
     private javax.swing.JTextField jTextFieldsearch;
     private javax.swing.JTextField jTextFieldtitle;
     // End of variables declaration//GEN-END:variables
+
+    public void removeRows(DefaultTableModel model) {
+        //deletes all the table rows
+        int rowCount = model.getRowCount();
+        //Remove rows one by one from the end of the table
+        for (int i = rowCount - 1; i >= 0; i--) {
+            model.removeRow(i);
+        }
+    }
 }
